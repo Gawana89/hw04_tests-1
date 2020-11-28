@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-{% if request.get_full_path == '/new/' %}
+{% if is_new_post %}
 Создать запись
 {% else %}
 Редактировать запись
@@ -8,25 +8,25 @@
 {% endblock %}
 
 {% block content %}
+{% url 'new_post' as new_post_path %}
 <div class="row justify-content-center">
     <div class="col-md-8 p-5">
         <div class="card">
-            {% if request.get_full_path == '/new/' %}
-            <div class="card-header">Новая запись</div>
-            <div class="card-body">
+            <div class="card-header">
+            {% if is_new_post %}
+                Новая запись
             {% else %}
-            <div class="card-header">Редактировать запись</div>
-            <div class="card-body">
+                Редактировать запись
             {% endif %}
-            
-                
+            </div>
+            <div class="card-body">        
                 {% for error in form.errors %}
                     <div class="alert alert-danger" role="alert">
                         {{ error|escape }}
                     </div>
                 {% endfor %}
 
-                {% if request.get_full_path == '/new/' %}
+                {% if is_new_post %}
                 <form method="post" action="{% url 'new_post' %}">
                 {% else %}
                 <form method="post" action="{% url 'post_edit' post.author post.id %}">
@@ -53,15 +53,13 @@
                     {% endfor %}
 
                     <div class="col-md-6 offset-md-4">
-                        {% if request.get_full_path == '/new/' %}
                         <button type="submit" class="btn btn-primary">
-                            Создать запись
+                            {% if is_new_post %}
+                                Создать запись
+                            {% else %}
+                                Редактировать запись
+                            {% endif %}
                         </button>
-                        {% else %}
-                        <button type="submit" class="btn btn-primary">
-                            Редактировать запись
-                        </button>
-                        {% endif %}
                     </div>
                 </form>
             </div> <!-- card body -->

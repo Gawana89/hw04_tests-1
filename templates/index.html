@@ -6,9 +6,9 @@
     {% for post in page %}
         
         <h3>
-            Автор: <a href="{{ post.author }}">{{ post.author.get_full_name }}</a>,
+            Автор: <a href="{% url 'profile' post.author %}">{{ post.author.get_full_name }}</a>,
             Дата публикации: {{ post.pub_date|date:"d M Y" }}, 
-            Сообщество: <a href="group/{{ post.group.slug }}">{{ post.group.title }}</a>
+            Сообщество: <a href="{% url 'group' group.slug }">{{ post.group.title }}</a>
         </h3>
 
         

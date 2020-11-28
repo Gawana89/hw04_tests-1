@@ -9,10 +9,10 @@ class PostPagesTests(TestSettings):
         """URL-адрес использует соответствующий шаблон."""
         templates_page_names = {
             reverse("index"): "index.html",
-            reverse("group", kwargs={"slug": "test-group"}): "group.html",
+            reverse("group", args=[self.group.slug]): "group.html",
             reverse("new_post"): "new.html",
             reverse(
-                "post_edit", kwargs={"username": "Stevinel", "post_id": 1}
+                "post_edit", args=[self.user.username, self.post.id]
             ): "new.html",
         }
 
@@ -32,7 +32,7 @@ class PostPagesTests(TestSettings):
     def test_group_page_show_correct_context(self):
         """Шаблон group сформирован с правильным контекстом."""
         response = self.authorized_client.get(
-            reverse("group", kwargs={"slug": "test-group"})
+            reverse("group", args=[self.group.slug])
         )
         self.assertEqual(response.context["group"], self.group)
         self.assertIn("page", response.context)
@@ -56,32 +56,29 @@ class PostPagesTests(TestSettings):
         """Шаблон profile сформирован с правильным контекстом."""
 
         response = self.authorized_client.get(
-            reverse("profile", kwargs={"username": "Stevinel"})
+            reverse("profile", args=[self.user.username])
         )
-        self.assertEqual(response.context["user_profile"], self.user)
-        self.assertEqual(response.context["username"], "Stevinel")
-        self.assertEqual(response.context["post_count"], 14)
+        self.assertEqual(response.context["page"][0].author, self.user)
         self.assertIn("page", response.context)
         self.assertEqual(
-            len(response.context["paginator"].page(2).object_list), 4
+            len(response.context["paginator"].page(2).object_list), 3
         )
 
     def test_post_page_show_correct_context(self):
         """Шаблон post сформирован с правильным контекстом."""
 
         response = self.authorized_client.get(
-            reverse("post", kwargs={"username": "Stevinel", "post_id": 1})
+            reverse("post", args=[self.user.username, self.post.id])
         )
-        self.assertEqual(response.context["user_profile"], self.user)
-        self.assertEqual(response.context["post"], self.post)
-        self.assertEqual(response.context["username"], "Stevinel")
-        self.assertEqual(response.context["post_count"], 14)
+        post = response.context["post"]
+        self.assertEqual(post.author, self.user)
+        self.assertEqual(post, self.post)
 
     def test_post_edit_page_show_correct_context(self):
         """Шаблон post_edit сформирован с правильным контекстом."""
 
         response = self.authorized_client.get(
-            reverse("post_edit", kwargs={"username": "Stevinel", "post_id": 1})
+            reverse("post_edit", args=[self.user.username, self.post.id])
         )
         self.assertIn("form", response.context)
         self.assertEqual(response.context["post"], self.post)
@@ -97,7 +94,4 @@ class PostPagesTests(TestSettings):
     def test_new_post_in_correct_group(self):
         """Пост находится в правильной группе"""
 
-        group_posts_pk = self.group.posts.values_list("id", flat=True)
-        group2_posts_pk = self.group2.posts.values_list("id", flat=True)
-        self.assertIn(self.post.id, group_posts_pk)
-        self.assertNotIn(self.post.id, group2_posts_pk)
+        self.assertEqual(self.post.group.id, self.group.id)

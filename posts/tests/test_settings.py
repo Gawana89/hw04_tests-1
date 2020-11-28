@@ -33,38 +33,20 @@ class TestSettings(TestCase):
         )
         cls.user_not_author = User.objects.create(username="NotAuthor")
 
-        Post.objects.create(
+        cls.post = Post.objects.create(
             id=1,
             author=cls.user,
             text="Тестовый тест(рабочий)",
             group=cls.group,
         )
-        Post.objects.create(
-            id=2,
-            text="Some text",
-            author=cls.user,
-            group=cls.group2,
-        )
-
-        cls.post = Post.objects.get(id=1)
 
         cls.patterns_and_codes = {
-            reverse("index"): {"anonymous": 200, "authorized": 200},
-            reverse("group", kwargs={"slug": "test-group"}): {
-                "anonymous": 200,
-                "authorized": 200,
-            },
-            reverse("new_post"): {"anonymous": 302, "authorized": 200},
-            reverse("profile", kwargs={"username": "Stevinel"}): {
-                "anonymous": 200,
-                "authorized": 200,
-            },
-            reverse("post", kwargs={"username": "Stevinel", "post_id": 1}): {
-                "anonymous": 200,
-                "authorized": 200,
-            },
+            reverse("index"): 200,
+            reverse("group", args=[cls.group.slug]): 200,
+            reverse("profile", args=[cls.user.username]): 200,
+            reverse("post", args=[cls.user.username, cls.post.id]): 200,
         }
-        for number in range(3, 14):
+        for number in range(2, 13):
             Post.objects.create(
                 id=number, text="Some text", author=cls.user, group=cls.group
             )

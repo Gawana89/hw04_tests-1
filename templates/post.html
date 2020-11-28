@@ -1,55 +1,15 @@
 {% extends "base.html" %}
-{% block title %}{{ user_profile.get_full_name }}{% endblock %}
-{% block header %}Пост{{ user_profile.get_full_name }}{% endblock %}
+{% block title %}{{ post.author.get_full_name }}{% endblock %}
+{% block header %}Пост{{ post.author.get_full_name }}{% endblock %}
 {% block content %}
 
 <main role="main" class="container">
     <div class="row">
-            <div class="col-md-3 mb-3 mt-1">
-                <div class="card">
-                        <div class="card-body">
-                                <div class="h2">
-                                        {{ user_profile.get_full_name }}
-                                </div>
-                                <div class="h3 text-muted">
-                                        {{ username }}
-                                </div>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                        <div class="h6 text-muted">
-                                        Подписчиков: XXX <br />
-                                        Подписан: XXX
-                                        </div>
-                                </li>
-                                <li class="list-group-item">
-                                        <div class="h6 text-muted">
-                                                {{ post_count }} 
-                                        </div>
-                                </li>
-                        </ul>
-                </div>
-        </div>
+        {% include "profile_info/info.html" with author=post.author %}
 
         <div class="col-md-9">
-
-                <div class="card mb-3 mt-1 shadow-sm">
-                        <div class="card-body">
-                                <p class="card-text">
-                                        <a href="{{ author }}"><strong class="d-block text-gray-dark">{{ username }}</strong></a>
-                                        {{ post.text }}
-                                </p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                        <div class="btn-group ">
-                                                {% if post.author.pk == request.user.pk %}    
-                                                    <a class="btn btn-sm text-muted" href="{% url 'post_edit' post.author post.id %}" role="button">Редактировать</a>
-                                                {% endif %}
-                                        </div>
-                                        <small class="text-muted">{{ post.pub_date|date:"d M Y" }}</small>
-                                </div>
-                        </div>
-                </div>
-     </div>
+            {% include "profile_info/post.html" with post=post is_author=is_author %}
+        </div>
     </div>
 </main> 
 

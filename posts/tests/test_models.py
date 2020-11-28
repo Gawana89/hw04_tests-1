@@ -31,8 +31,8 @@ class PostModelTest(TestSettings):
     def test_method_str(self):
         """Тест метода str модели Post"""
         post = PostModelTest.post
-        post_text = "Тестовый тест(рабочий)"
-        self.assertEqual(post.__str__(), post_text[:15])
+        text = post.text
+        self.assertEqual(text, "Тестовый тест(рабочий)")
 
 
 class GroupModelTest(TestSettings):
