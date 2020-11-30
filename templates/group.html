@@ -13,7 +13,7 @@
     <h3>
       Автор: {{ post.author.get_full_name }},
       Дата публикации: {{ post.pub_date|date:"d M Y" }},
-      Сообщество: <a href="{% url 'group' group.slug }">{{ post.group.title }}</a>
+      Сообщество: <a href="{% url 'group' post.group.slug %}">{{ post.group.title }}</a>
     </h3>
     <p>
       {{ post.text }}

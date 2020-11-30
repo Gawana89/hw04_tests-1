@@ -10,7 +10,7 @@
                     <a class="btn btn-sm text-muted" href="{% url 'post' post.author post.id %}" role="button">Добавить комментарий</a>
                 {% endif %}
 
-                {% if is_author %}    
+                {% if post.author == request.user %}    
                     <a class="btn btn-sm text-muted" href="{% url 'post_edit' post.author post.id %}" role="button">Редактировать</a>
                 {% endif %}
             </div>

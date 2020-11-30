@@ -26,7 +26,7 @@ class PostPagesTests(TestSettings):
         response = self.authorized_client.get(reverse("index"))
         self.assertIn("page", response.context)
         self.assertEqual(
-            len(response.context["paginator"].page(1).object_list), 10
+            response.context["paginator"].page(1).object_list.count(), 10
         )
 
     def test_group_page_show_correct_context(self):
@@ -37,7 +37,7 @@ class PostPagesTests(TestSettings):
         self.assertEqual(response.context["group"], self.group)
         self.assertIn("page", response.context)
         self.assertEqual(
-            len(response.context["paginator"].page(1).object_list), 10
+            response.context["paginator"].page(1).object_list.count(), 10
         )
 
     def test_new_page_show_correct_context(self):
@@ -60,8 +60,10 @@ class PostPagesTests(TestSettings):
         )
         self.assertEqual(response.context["page"][0].author, self.user)
         self.assertIn("page", response.context)
+        self.assertIn("user_profile", response.context)
+        self.assertIn("is_author", response.context)
         self.assertEqual(
-            len(response.context["paginator"].page(2).object_list), 3
+            response.context["paginator"].page(2).object_list.count(), 3
         )
 
     def test_post_page_show_correct_context(self):
@@ -90,8 +92,3 @@ class PostPagesTests(TestSettings):
             response = self.anonymous_client.get(url)
             with self.subTest():
                 self.assertEqual(response.status_code, 200)
-
-    def test_new_post_in_correct_group(self):
-        """Пост находится в правильной группе"""
-
-        self.assertEqual(self.post.group.id, self.group.id)

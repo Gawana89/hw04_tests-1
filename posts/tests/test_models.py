@@ -32,7 +32,7 @@ class PostModelTest(TestSettings):
         """Тест метода str модели Post"""
         post = PostModelTest.post
         text = post.text
-        self.assertEqual(text, "Тестовый тест(рабочий)")
+        self.assertEqual(str(text), text)
 
 
 class GroupModelTest(TestSettings):
@@ -68,4 +68,4 @@ class GroupModelTest(TestSettings):
         """Тест метода str модели Group"""
         group = GroupModelTest.group
         title = group.title
-        self.assertEqual(title, "test")
+        self.assertEqual(str(title), title)
