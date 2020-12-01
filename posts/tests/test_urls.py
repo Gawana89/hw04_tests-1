@@ -4,7 +4,6 @@ from posts.tests.test_settings import TestSettings
 
 
 class PostURLTests(TestSettings):
-
     def test_accessibility_urls(self):
         """Тест работоспособности страниц"""
         patterns_and_codes = {
@@ -39,4 +38,3 @@ class PostURLTests(TestSettings):
             response_anonymous, reverse("login") + "?next=" + pattern
         )
         self.assertEqual(response_auth_client.status_code, 200)
-        

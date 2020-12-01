@@ -48,15 +48,10 @@ def profile(request, username):
     paginator = Paginator(post, 10)
     page_number = request.GET.get("page")
     page = paginator.get_page(page_number)
-    is_author = request.user == user_profile
     return render(
         request,
         "profile.html",
-        {
-            "page": page,
-            "paginator": paginator,
-            "user_profile": user_profile
-        },
+        {"page": page, "paginator": paginator, "user_profile": user_profile},
     )
 
 

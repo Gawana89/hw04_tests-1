@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.sites.models import Site
 from django.test import Client, TestCase
-from django.urls import reverse
 
 from posts.models import Group, Post
 
@@ -17,13 +16,11 @@ class TestSettings(TestCase):
         Объекты будут импортироваться в другие тесты"""
         super().setUpClass()
         cls.user = User.objects.create(
-            id=1,
             username="Stevinel",
             first_name="Stan",
             last_name="Voronov",
         )
         cls.group = Group.objects.create(
-            id=1,
             title="test",
             slug="test-group",
             description="some description",
@@ -34,7 +31,6 @@ class TestSettings(TestCase):
         cls.user_not_author = User.objects.create(username="NotAuthor")
 
         cls.post = Post.objects.create(
-            id=1,
             author=cls.user,
             text="Тестовый тест(рабочий)",
             group=cls.group,

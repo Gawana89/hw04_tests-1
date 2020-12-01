@@ -12,16 +12,17 @@ class PostCreateFormTest(TestSettings):
         """Новый пост создаётся успешно"""
         posts_count = Post.objects.count()
         group = Group.objects.get(id=1)
-        form_data = {"text": "Какой-то текст", "group": group.id}
+        form_data = {"text": "Тестовый тест(рабочий)", "group": group.id}
 
         response = self.authorized_client.post(
             reverse("new_post"), data=form_data, follow=True
         )
+        post = Post.objects.first()
         self.assertRedirects(response, reverse("index"))
         self.assertEqual(Post.objects.count(), posts_count + 1)
-        self.assertEqual(response.context["page"][0].text, form_data["text"])
-        self.assertEqual(response.context["page"][0].author, self.user)
-        self.assertEqual(response.context["page"][0].group.id, form_data["group"])
+        self.assertEqual(post.text, form_data["text"])
+        self.assertEqual(post.author, self.user)
+        self.assertEqual(post.group.id, form_data["group"])
 
     def test_edit_post(self):
         """Пост редактируется"""
@@ -34,7 +35,7 @@ class PostCreateFormTest(TestSettings):
             data=form_data,
             follow=True,
         )
-        post = Post.objects.get(id=1)
+        post = Post.objects.last()
         self.assertEqual(post.text, form_data["text"])
         self.assertEqual(post.author, self.user)
         self.assertEqual(post.group.id, form_data["group"])
